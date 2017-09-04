@@ -30,6 +30,35 @@ append_to_zshrc() {
   fi
 }
 
+# Not needed with Oh My Zsh
+
+# update_shell() {
+#   local shell_path;
+#   shell_path="$(which zsh)"
+#
+#   fancy_echo "Changing your shell to zsh ..."
+#   if ! grep "$shell_path" /etc/shells > /dev/null 2>&1 ; then
+#     fancy_echo "Adding '$shell_path' to /etc/shells"
+#     sudo sh -c "echo $shell_path >> /etc/shells"
+#   fi
+#   sudo chsh -s "$shell_path" "$USER"
+# }
+
+gem_install_or_update() {
+  if gem list "$1" --installed > /dev/null; then
+    gem update "$@"
+  else
+    gem install "$@"
+    rbenv rehash
+  fi
+}
+
+find_latest_ruby() {
+  rbenv install -l | grep -v - | tail -1 | sed -e 's/^ *//'
+}
+
+# ------------------------------ STARTS HERE -----------------------------------
+
 # shellcheck disable=SC2154
 trap 'ret=$?; test $ret -ne 0 && printf "failed\n\n" >&2; exit $ret' EXIT
 
@@ -58,38 +87,6 @@ else
   sudo chown -R "$LOGNAME:admin" "$HOMEBREW_PREFIX"
 fi
 
-update_shell() {
-  local shell_path;
-  shell_path="$(which zsh)"
-
-  fancy_echo "Changing your shell to zsh ..."
-  if ! grep "$shell_path" /etc/shells > /dev/null 2>&1 ; then
-    fancy_echo "Adding '$shell_path' to /etc/shells"
-    sudo sh -c "echo $shell_path >> /etc/shells"
-  fi
-  sudo chsh -s "$shell_path" "$USER"
-}
-
-case "$SHELL" in
-  */zsh)
-    if [ "$(which zsh)" != '/usr/local/bin/zsh' ] ; then
-      update_shell
-    fi
-    ;;
-  *)
-    update_shell
-    ;;
-esac
-
-gem_install_or_update() {
-  if gem list "$1" --installed > /dev/null; then
-    gem update "$@"
-  else
-    gem install "$@"
-    rbenv rehash
-  fi
-}
-
 if ! command -v brew >/dev/null; then
   fancy_echo "Installing Homebrew ..."
     curl -fsS \
@@ -109,48 +106,28 @@ if brew list | grep -Fq brew-cask; then
 fi
 
 fancy_echo "Updating Homebrew formulae ..."
+
+number_of_cores=$(sysctl -n hw.ncpu)
+bundle config --global jobs $((number_of_cores - 1))
+
 brew update --force # https://github.com/Homebrew/brew/issues/1151
-brew bundle --file=- <<EOF
-tap "thoughtbot/formulae"
-tap "homebrew/services"
-tap "universal-ctags/universal-ctags"
+brew bundle --file=Brewfile
 
-# Unix
-brew "universal-ctags", args: ["HEAD"]
-brew "git"
-brew "openssl"
-brew "rcm"
-brew "reattach-to-user-namespace"
-brew "the_silver_searcher"
-brew "tmux"
-brew "vim"
-brew "watchman"
-brew "zsh"
+# case "$SHELL" in
+#   */zsh)
+#     if [ "$(which zsh)" != '/usr/local/bin/zsh' ] ; then
+#       update_shell
+#     fi
+#     ;;
+#   *)
+#     update_shell
+#     ;;
+# esac
 
-# Heroku
-brew "heroku"
-brew "parity"
-
-# GitHub
-brew "hub"
-
-# Image manipulation
-brew "imagemagick"
-
-# Testing
-brew "qt@5.5" if MacOS::Xcode.installed?
-
-# Programming languages and package managers
-brew "libyaml" # should come after openssl
-brew "node"
-brew "rbenv"
-brew "ruby-build"
-brew "yarn"
-
-# Databases
-brew "postgres", restart_service: :changed
-brew "redis", restart_service: :changed
-EOF
+if [ ! -d "$HOME/.oh-my-zsh" ]; then
+  fancy_echo "Installing Oh My Zsh"
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+fi
 
 if brew list | grep --silent "qt@5.5"; then
   fancy_echo "Symlink qmake binary to /usr/local/bin for Capybara Webkit..."
@@ -163,9 +140,6 @@ brew unlink heroku
 brew link --force heroku
 
 fancy_echo "Configuring Ruby ..."
-find_latest_ruby() {
-  rbenv install -l | grep -v - | tail -1 | sed -e 's/^ *//'
-}
 
 ruby_version="$(find_latest_ruby)"
 # shellcheck disable=SC2016
@@ -177,14 +151,19 @@ if ! rbenv versions | grep -Fq "$ruby_version"; then
 fi
 
 rbenv global "$ruby_version"
-rbenv shell "$ruby_version"
+rbenv shell  "$ruby_version"
 gem update --system
 gem_install_or_update 'bundler'
-number_of_cores=$(sysctl -n hw.ncpu)
-bundle config --global jobs $((number_of_cores - 1))
+
+fancy_echo "Do you wish to alter MacOS Settings?"
+select yn in "Yes" "No"; do
+  case $yn in
+    Yes ) ./MacOSfile; break;;
+    No  ) break;;
+  esac
+done
 
 if [ -f "$HOME/.laptop.local" ]; then
   fancy_echo "Running your customizations from ~/.laptop.local ..."
-  # shellcheck disable=SC1090
   . "$HOME/.laptop.local"
 fi
