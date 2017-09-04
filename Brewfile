@@ -43,7 +43,6 @@ brew 'phantomjs'
 brew 'postgresql'
 brew 'rbenv'
 brew 'ruby-build'
-brew 'openssl'
 
 # DATABASES
 brew 'postgres', restart_service: :changed
