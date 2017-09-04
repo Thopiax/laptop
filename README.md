@@ -23,16 +23,7 @@ Execute the downloaded script:
 sh mac 2>&1 | tee ~/laptop.log
 ```
 
-Debugging
----------
-
-Your last Laptop run will be saved to `~/laptop.log`.
-Read through it to see if you can debug the issue yourself.
-If not, copy the lines where the script failed into a
-[new GitHub Issue](https://github.com/thoughtbot/laptop/issues/new) for us.
-Or, attach the whole log file as an attachment.
-
-What it sets up
+Development tools
 ---------------
 
 macOS tools:
@@ -46,27 +37,26 @@ Unix tools:
 * [Exuberant Ctags] for indexing files for vim tab completion
 * [Git] for version control
 * [OpenSSL] for Transport Layer Security (TLS)
-* [RCM] for managing company and personal dotfiles
-* [The Silver Searcher] for finding things in files
-* [Tmux] for saving project state and switching between projects
-* [Watchman] for watching for filesystem events
-* [Zsh] as your shell
+* [OhMyZsh] as your shell
 
 [Exuberant Ctags]: http://ctags.sourceforge.net/
 [Git]: https://git-scm.com/
 [OpenSSL]: https://www.openssl.org/
-[RCM]: https://github.com/thoughtbot/rcm
-[The Silver Searcher]: https://github.com/ggreer/the_silver_searcher
-[Tmux]: http://tmux.github.io/
-[Watchman]: https://facebook.github.io/watchman/
-[Zsh]: http://www.zsh.org/
+[Zsh]: https://github.com/robbyrussell/oh-my-zsh
+
+VMs and Containers:
+
+* [Docker] for easy containerisation
+
+[Docker]: https://www.docker.com
 
 Heroku tools:
 
-* [Heroku CLI] and [Parity] for interacting with the Heroku API
+* [Heroku CLI] for interacting with the Heroku API
+* [Hostess] for managing the /etc/hosts file
 
 [Heroku CLI]: https://devcenter.heroku.com/articles/heroku-cli
-[Parity]: https://github.com/thoughtbot/parity
+[Hostess]: https://github.com/cbednarski/hostess
 
 GitHub tools:
 
@@ -85,13 +75,18 @@ Testing tools:
 [Qt 5]: http://qt-project.org/
 [Capybara Webkit]: https://github.com/thoughtbot/capybara-webkit
 
-Programming languages, package managers, and configuration:
+Programming languages:
+
+* [Elm] for JavaScript projects
+* [Elixir] for functional & concurrent programming needs
+* [Ruby] and [Python] for general development
+
+Package managers, and configuration:
 
 * [Bundler] for managing Ruby libraries
 * [Node.js] and [NPM], for running apps and installing JavaScript packages
 * [Rbenv] for managing versions of Ruby
 * [Ruby Build] for installing Rubies
-* [Ruby] stable for writing general-purpose code
 * [Yarn] for managing JavaScript packages
 
 [Bundler]: http://bundler.io/
@@ -101,6 +96,9 @@ Programming languages, package managers, and configuration:
 [Rbenv]: https://github.com/sstephenson/rbenv
 [Ruby Build]: https://github.com/sstephenson/ruby-build
 [Ruby]: https://www.ruby-lang.org/en/
+[Elm]: http://elm-lang.org
+[Elixir]: https://elixir-lang.org
+[Python]: https://www.python.org
 [Yarn]: https://yarnpkg.com/en/
 
 Databases:
@@ -110,6 +108,39 @@ Databases:
 
 [Postgres]: http://www.postgresql.org/
 [Redis]: http://redis.io/
+
+Applications
+------------
+
+Core Apps:
+
+* [Alfred] for a better spotlight search
+* [Dropbox] for great and easy cloud storage
+* [Little Snitch] for stopping any unwanted connections
+* [Java] just in case
+
+Development:
+
+* [iTerm2] for a better terminal
+* [Atom] for fully customisable editor
+* [MacVIm] for a more adapt quick editor
+* [Postico] for simpler database handling
+
+Day2Day:
+
+* [Google Chrome] when Safari f*cks up
+* [Spotify] for tunes
+
+[Alfred]: https://www.alfredapp.com
+[Dropbox]: https://www.dropbox.com/
+[MacVIm]: http://macvim-dev.github.io/macvim
+[Postico]: https://eggerapps.at/postico/
+[iTerm2]: https://www.iterm2.com
+[Atom]: https://atom.io
+[Little Snitch]: https://www.obdev.at/products/littlesnitch/index.html
+[Java]: https://www.java.com/en/
+[Google Chrome]: https://www.google.com/chrome/index.html
+[Spotify]: https://www.spotify.com/us/
 
 It should take less than 15 minutes to install (depends on your machine).
 
@@ -166,29 +197,6 @@ can be used in your `~/.laptop.local`.
 See the [wiki](https://github.com/thoughtbot/laptop/wiki)
 for more customization examples.
 
-Contributing
-------------
-
-Edit the `mac` file.
-Document in the `README.md` file.
-Follow shell style guidelines by using [ShellCheck] and [Syntastic].
-
-```sh
-brew install shellcheck
-```
-
-[ShellCheck]: http://www.shellcheck.net/about.html
-[Syntastic]: https://github.com/scrooloose/syntastic
-
-Thank you, [contributors]!
-
-[contributors]: https://github.com/thoughtbot/laptop/graphs/contributors
-
-By participating in this project,
-you agree to abide by the thoughtbot [code of conduct].
-
-[code of conduct]: https://thoughtbot.com/open-source-code-of-conduct
-
 License
 -------
 
@@ -197,18 +205,3 @@ It is free software,
 and may be redistributed under the terms specified in the [LICENSE] file.
 
 [LICENSE]: LICENSE
-
-About thoughtbot
-----------------
-
-![thoughtbot](http://presskit.thoughtbot.com/images/thoughtbot-logo-for-readmes.svg)
-
-Laptop is maintained and funded by thoughtbot, inc.
-The names and logos for thoughtbot are trademarks of thoughtbot, inc.
-
-We are passionate about open source software.
-See [our other projects][community].
-We are [available for hire][hire].
-
-[community]: https://thoughtbot.com/community?utm_source=github
-[hire]: https://thoughtbot.com?utm_source=github
