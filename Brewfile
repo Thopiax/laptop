@@ -8,19 +8,23 @@ tap 'homebrew/services'
 # --------------------------------- BREWS --------------------------------------
 
 # ELIXIR
-brew 'elixir'
+# Uncomment below to get basic elixir support
+# brew 'elixir'
 
 # ELM
-brew 'elm'
-brew 'elm-format'
+# Uncomment below to get basic ELM support
+# brew 'elm'
+# brew 'elm-format'
 
 # PYTHON
-brew 'python'
-brew 'python3'
-brew 'pip'
+# Uncomment below to get basic python support
+# brew 'python'
+# brew 'python3'
+# brew 'pip'
 
 # GIT
 brew 'git'
+
 # GitHub
 brew 'hub'
 
@@ -29,20 +33,24 @@ brew 'zsh'
 brew 'zsh-syntax-highlighting'
 
 # HEROKU
-brew 'heroku'
-brew 'hostess'
+# brew 'heroku'
+# brew 'hostess'
 
 # IMAGE MANIPULATION
-brew 'imagemagick@6'
+# brew 'imagemagick@6'
 
-# RAILS DEV
-brew 'openssl'
-brew 'libyaml' # should come after openssl
-brew 'node'
-brew 'phantomjs'
-brew 'postgresql'
-brew 'rbenv'
-brew 'ruby-build'
+# NODE
+# Uncomment below to get basic node support
+# brew 'node'
+
+# RUBY/RAILS DEV
+# Uncomment below to get basic ruby support
+# brew 'openssl'
+# brew 'libyaml' # should come after openssl
+# brew 'phantomjs'
+# brew 'postgresql'
+# brew 'rbenv'
+# brew 'ruby-build'
 
 # DATABASES
 brew 'postgres', restart_service: :changed
@@ -66,7 +74,6 @@ cask 'iterm2'
 cask 'java' unless system '/usr/libexec/java_home --failfast'
 
 # ORGANISATION
-cask 'wunderlist'
 cask 'puush'
 cask 'slack'
 

@@ -68,9 +68,9 @@ if [ ! -d "$HOME/.bin/" ]; then
   mkdir "$HOME/.bin"
 fi
 
-if [ ! -f "$HOME/.zshrc" ]; then
-  touch "$HOME/.zshrc"
-fi
+# if [ ! -f "$HOME/.zshrc" ]; then
+#   touch "$HOME/.zshrc"
+# fi
 
 # shellcheck disable=SC2016
 append_to_zshrc 'export PATH="$HOME/.bin:$PATH"'
@@ -107,22 +107,13 @@ fi
 
 fancy_echo "Updating Homebrew formulae ..."
 
-number_of_cores=$(sysctl -n hw.ncpu)
-bundle config --global jobs $((number_of_cores - 1))
+if [ $1 == 'ruby' ] ; then
+  number_of_cores=$(sysctl -n hw.ncpu)
+  bundle config --global jobs $((number_of_cores - 1))
+fi
 
 brew update --force # https://github.com/Homebrew/brew/issues/1151
 brew bundle --file=Brewfile
-
-# case "$SHELL" in
-#   */zsh)
-#     if [ "$(which zsh)" != '/usr/local/bin/zsh' ] ; then
-#       update_shell
-#     fi
-#     ;;
-#   *)
-#     update_shell
-#     ;;
-# esac
 
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
   fancy_echo "Installing Oh My Zsh"
@@ -139,21 +130,23 @@ fancy_echo "Update heroku binary..."
 brew unlink heroku
 brew link --force heroku
 
-fancy_echo "Configuring Ruby ..."
+if [ $1 == 'ruby' ] ; then
+  fancy_echo "Configuring Ruby ..."
 
-ruby_version="$(find_latest_ruby)"
-# shellcheck disable=SC2016
-append_to_zshrc 'eval "$(rbenv init - --no-rehash)"' 1
-eval "$(rbenv init -)"
+  ruby_version="$(find_latest_ruby)"
+  # shellcheck disable=SC2016
+  append_to_zshrc 'eval "$(rbenv init - --no-rehash)"' 1
+  eval "$(rbenv init -)"
 
-if ! rbenv versions | grep -Fq "$ruby_version"; then
-  RUBY_CONFIGURE_OPTS=--with-openssl-dir=/usr/local/opt/openssl rbenv install -s "$ruby_version"
+  if ! rbenv versions | grep -Fq "$ruby_version"; then
+    RUBY_CONFIGURE_OPTS=--with-openssl-dir=/usr/local/opt/openssl rbenv install -s "$ruby_version"
+  fi
+
+  rbenv global "$ruby_version"
+  rbenv shell  "$ruby_version"
+  gem update --system
+  gem_install_or_update 'bundler'
 fi
-
-rbenv global "$ruby_version"
-rbenv shell  "$ruby_version"
-gem update --system
-gem_install_or_update 'bundler'
 
 fancy_echo "Do you wish to alter MacOS Settings?"
 select yn in "Yes" "No"; do
